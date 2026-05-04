@@ -2,10 +2,17 @@ import "./style.css";
 
 import { animate, svg, stagger } from "animejs";
 
-animate(svg.createDrawable("#Playa"), {
-  draw: ["0 0", "0 1", "1 1"],
-  ease: "inOutQuad",
-  duration: 2000,
-  delay: stagger(100),
-  loop: true,
+document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
+  group.addEventListener("mouseover", () => {
+    animate(group, {
+      y: [{ to: "-1rem", ease: "outBounce", duration: 300 }],
+    });
+  });
+  group.addEventListener("mouseout", () => {
+    animate(group, {
+      y: 0,
+      duration: 500,
+      easing: "outBounce",
+    });
+  });
 });
