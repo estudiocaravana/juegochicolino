@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+svg > #Playa > g:hover *,
+svg > #Juegos > g:hover * {
+  @apply stroke-white;
+}

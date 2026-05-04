@@ -1,24 +1,19 @@
 {
   "name": "chicolino",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "build-css": "postcss src/styles.css -o dist/styles.css --watch",
-    "build": "postcss src/styles.css -o dist/styles.css",
-    "dev": "postcss src/styles.css -o dist/styles.css --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.2.4",
-    "@tailwindcss/typography": "^0.5.19",
-    "autoprefixer": "^10.5.0",
-    "postcss": "^8.5.13",
-    "postcss-cli": "^11.0.1",
+    "vite": "^8.0.10"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.2.4",
+    "animejs": "^4.4.1",
     "tailwindcss": "^4.2.4"
   }
 }
