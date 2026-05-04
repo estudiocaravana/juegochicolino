@@ -5,7 +5,6 @@ svg > #Juegos > g {
   @apply origin-center;
   transform-box: fill-box;
 }
-svg > #Playa > g:hover *,
-svg > #Juegos > g:hover * {
+.seleccionado *:not(.rectangulo) {
   @apply stroke-white;
 }
