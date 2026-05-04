@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+svg > #Playa > g,
+svg > #Juegos > g {
+  @apply origin-center;
+  transform-box: fill-box;
+}
 svg > #Playa > g:hover *,
 svg > #Juegos > g:hover * {
   @apply stroke-white;
