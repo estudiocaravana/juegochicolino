@@ -3,6 +3,9 @@ import "./style.css";
 import { animate, createTimeline, svg, stagger } from "animejs";
 
 document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
+  let svgPadre = group.closest("svg");
+  let padre = group.parentNode;
+
   let cuadradoDibujado = false;
   let originalIndex;
   let drawable;
@@ -25,6 +28,7 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
       });
     }
   });
+
   group.addEventListener("mouseout", () => {
     if (!cuadradoDibujado) {
       group.classList.remove("seleccionado");
@@ -66,8 +70,8 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
 
       // Colocamos el grupo en el centro de la pantalla
       const groupRect = group.getBoundingClientRect();
-      const centerY = window.innerHeight / 2;
-      const centerX = window.innerWidth / 2;
+      const centerY = window.clientHeight / 2;
+      const centerX = window.clientWidth / 2;
       const offsetY = centerY - (groupRect.top + groupRect.height / 2);
       const offsetX = centerX - (groupRect.left + groupRect.width / 2);
 
@@ -77,20 +81,20 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
         .add(
           group,
           {
-            y: [
-              {
-                to: offsetY,
-                ease: "inOutQuad",
-                duration: 500,
-              },
-            ],
-            x: [
-              {
-                to: offsetX,
-                ease: "inOutQuad",
-                duration: 500,
-              },
-            ],
+            // y: [
+            //   {
+            //     to: offsetY,
+            //     ease: "inOutQuad",
+            //     duration: 500,
+            //   },
+            // ],
+            // x: [
+            //   {
+            //     to: offsetX,
+            //     ease: "inOutQuad",
+            //     duration: 500,
+            //   },
+            // ],
             scale: [{ to: "2", ease: "outElastic(1, 0.3)", duration: 1000 }],
           },
           "start",
@@ -163,7 +167,9 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
           const referenceNode =
             group.parentNode.children[originalIndex] || null;
           group.parentNode.insertBefore(group, referenceNode);
+
           rect.remove();
+
           cuadradoDibujado = false;
         }, 300);
     }
