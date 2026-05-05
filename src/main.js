@@ -9,6 +9,7 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
   let animandoObjeto = false;
   let originalIndex;
   let drawable;
+  let textoDrawable;
   let tarjeta;
   let textoTarjeta;
 
@@ -107,10 +108,11 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
         textoTarjeta.setAttribute("x", bbox.x + bbox.width + 50);
         textoTarjeta.setAttribute("y", bbox.y + 20);
         textoTarjeta.setAttribute("text-anchor", "left");
+        textoTarjeta.setAttribute("opacity", "0");
         textoTarjeta.setAttribute("dominant-baseline", "middle");
 
         let texto =
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut mollis sapien, at aliquet mi. Aliquam venenatis a dolor quis fringilla. Phasellus gravida rutrum ante. Etiam at orci sit amet quam pulvinar imperdiet. Proin eget volutpat diam, quis rhoncus nisl. Praesent ultrices arcu id libero commodo, ut efficitur dui ullamcorper. In volutpat odio vel nibh posuere tincidunt.";
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut mollis sapien, at aliquet mi. Aliquam venenatis a dolor quis fringilla. Phasellus gravida rutrum ante. Etiam at orci sit amet quam pulvinar imperdiet. Proin eget volutpat diam, quis rhoncus nisl.";
 
         let lineas = texto.match(/.{1,40}/g); // Dividir el texto en líneas de 40 caracteres
         lineas.forEach((linea, index) => {
@@ -123,7 +125,6 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
           tspan.textContent = linea;
           textoTarjeta.appendChild(tspan);
         });
-
         group.append(textoTarjeta);
 
         drawable = svg.createDrawable(tarjeta);
@@ -148,20 +149,6 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
           .add(
             group,
             {
-              // y: [
-              //   {
-              //     to: offsetY,
-              //     ease: "inOutQuad",
-              //     duration: 500,
-              //   },
-              // ],
-              // x: [
-              //   {
-              //     to: offsetX,
-              //     ease: "inOutQuad",
-              //     duration: 500,
-              //   },
-              // ],
               scale: [{ to: "2", ease: "outElastic(1, 0.3)", duration: 1000 }],
             },
             "start",
@@ -184,7 +171,24 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
               duration: 500,
             },
             400,
-          );
+          )
+          .add(
+            textoTarjeta,
+            {
+              opacity: 1,
+              ease: "inOutQuad",
+              duration: 1000,
+              delay: stagger(100),
+            },
+            400,
+          )
+          .add(group, {
+            rotate: "2deg",
+            ease: "inOutSine",
+            alternate: true,
+            loop: true,
+            duration: 4000,
+          });
       } else {
         const tl = createTimeline({ defaults: { duration: 750 } });
 
