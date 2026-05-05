@@ -1,6 +1,6 @@
 import "./style.css";
 
-import { animate, createTimeline, svg, stagger } from "animejs";
+import { animate, createTimeline, svg, stagger, text } from "animejs";
 
 document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
   let svgPadre = group.closest("svg");
@@ -9,7 +9,8 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
   let animandoObjeto = false;
   let originalIndex;
   let drawable;
-  let rect;
+  let tarjeta;
+  let textoTarjeta;
 
   group.addEventListener("mouseover", () => {
     if (!animandoObjeto) {
@@ -80,22 +81,52 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
         animandoObjeto = true;
         // Añade un cuadrado que rodea a cada grupo
         const bbox = group.getBBox();
-        rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        rect.setAttribute("class", "rectangulo");
-        rect.setAttribute("x", bbox.x - 10);
-        rect.setAttribute("y", bbox.y - 10);
-        rect.setAttribute("width", bbox.width + 20);
-        rect.setAttribute("height", bbox.height + 20);
-        rect.setAttribute("fill", "#ffffff00"); // Transparente
-        rect.setAttribute("pointer-events", "all");
-        rect.setAttribute("stroke-width", 2);
-        rect.setAttribute("stroke", "#000000");
-        rect.setAttribute("rx", "5");
-        rect.setAttribute("ry", "5");
+        tarjeta = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "rect",
+        );
+        tarjeta.setAttribute("class", "rectangulo");
+        tarjeta.setAttribute("x", bbox.x - 10);
+        tarjeta.setAttribute("y", bbox.y - 10);
+        tarjeta.setAttribute("width", bbox.width + 400);
+        tarjeta.setAttribute("height", bbox.height + 20);
+        tarjeta.setAttribute("fill", "#ffffff00"); // Transparente
+        tarjeta.setAttribute("pointer-events", "all");
+        tarjeta.setAttribute("stroke-width", 2);
+        tarjeta.setAttribute("stroke", "#000000");
+        tarjeta.setAttribute("rx", "5");
+        tarjeta.setAttribute("ry", "5");
         // Colocamos el rect al comienzo del grupo para que quede debajo de los elementos
-        group.insertBefore(rect, group.firstChild);
+        group.insertBefore(tarjeta, group.firstChild);
 
-        drawable = svg.createDrawable(rect);
+        textoTarjeta = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "text",
+        );
+        textoTarjeta.setAttribute("class", "texto-tarjeta");
+        textoTarjeta.setAttribute("x", bbox.x + bbox.width + 50);
+        textoTarjeta.setAttribute("y", bbox.y + 20);
+        textoTarjeta.setAttribute("text-anchor", "left");
+        textoTarjeta.setAttribute("dominant-baseline", "middle");
+
+        let texto =
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut mollis sapien, at aliquet mi. Aliquam venenatis a dolor quis fringilla. Phasellus gravida rutrum ante. Etiam at orci sit amet quam pulvinar imperdiet. Proin eget volutpat diam, quis rhoncus nisl. Praesent ultrices arcu id libero commodo, ut efficitur dui ullamcorper. In volutpat odio vel nibh posuere tincidunt.";
+
+        let lineas = texto.match(/.{1,40}/g); // Dividir el texto en líneas de 40 caracteres
+        lineas.forEach((linea, index) => {
+          const tspan = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "tspan",
+          );
+          tspan.setAttribute("x", bbox.x + bbox.width + 50);
+          tspan.setAttribute("y", bbox.y + 20 + index * 20);
+          tspan.textContent = linea;
+          textoTarjeta.appendChild(tspan);
+        });
+
+        group.append(textoTarjeta);
+
+        drawable = svg.createDrawable(tarjeta);
 
         // Guardamos la posición de hijo original del grupo con respecto al padre
         originalIndex = Array.from(group.parentNode.children).indexOf(group);
@@ -146,7 +177,7 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
             200,
           )
           .add(
-            rect,
+            tarjeta,
             {
               fill: "#ffffffff",
               ease: "inOutQuad",
@@ -169,7 +200,7 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
             "start",
           )
           .add(
-            rect,
+            tarjeta,
             {
               fill: "#ffffff00",
               ease: "inOutQuad",
@@ -204,7 +235,8 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
               group.parentNode.children[originalIndex] || null;
             group.parentNode.insertBefore(group, referenceNode);
 
-            rect.remove();
+            tarjeta.remove();
+            textoTarjeta.remove();
 
             animandoObjeto = false;
           }, 300);
