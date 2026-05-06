@@ -6,7 +6,7 @@ svg > #Juegos > g {
   transform-box: fill-box;
 }
 .seleccionado *:not(.rectangulo) {
-  @apply stroke-white;
+  /* @apply stroke-white; */
 }
 .incorrectoClickado * {
   @apply transition-[fill,stroke] duration-300 ease-in-out;

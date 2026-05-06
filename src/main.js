@@ -1,6 +1,20 @@
 import "./style.css";
 
-import { animate, createTimeline, svg, stagger, text } from "animejs";
+import {
+  animate,
+  createTimeline,
+  createAnimatable,
+  svg,
+  stagger,
+  text,
+} from "animejs";
+
+const { PI } = Math;
+
+let objetoSeleccionado = null;
+let objetoBounds = null;
+let lastAngle = 0;
+let angle = PI / 2;
 
 document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
   let svgPadre = group.closest("svg");
@@ -137,11 +151,11 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
         // svgPadre.appendChild(group);
 
         // Colocamos el grupo en el centro de la pantalla
-        const groupRect = group.getBoundingClientRect();
+        objetoBounds = group.getBoundingClientRect();
         const centerY = window.clientHeight / 2;
         const centerX = window.clientWidth / 2;
-        const offsetY = centerY - (groupRect.top + groupRect.height / 2);
-        const offsetX = centerX - (groupRect.left + groupRect.width / 2);
+        const offsetY = centerY - (objetoBounds.top + objetoBounds.height / 2);
+        const offsetX = centerX - (objetoBounds.left + objetoBounds.width / 2);
 
         const tl = createTimeline({ defaults: { duration: 750 } });
 
@@ -189,6 +203,11 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
             loop: true,
             duration: 4000,
           });
+
+        // objetoSeleccionado = createAnimatable(group, {
+        //   rotate: { unit: "rad" }, // Set the unit to 'rad'
+        //   duration: 400,
+        // });
       } else {
         const tl = createTimeline({ defaults: { duration: 750 } });
 
@@ -243,8 +262,24 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
             textoTarjeta.remove();
 
             animandoObjeto = false;
+            objetoSeleccionado = null;
           }, 300);
       }
     }
   });
 });
+
+const onMouseMove = (e) => {
+  if (objetoSeleccionado) {
+    const { width, height, left, top } = objetoBounds;
+    const x = e.clientX - left - width / 2;
+    const y = e.clientY - top - height / 2;
+    const currentAngle = Math.atan2(y, x);
+    const diff = currentAngle - lastAngle;
+    angle += diff > PI ? diff - 2 * PI : diff < -PI ? diff + 2 * PI : diff;
+    lastAngle = currentAngle;
+    objetoSeleccionado.rotate(angle); // Pass the new angle value in rad
+  }
+};
+
+window.addEventListener("mousemove", onMouseMove);
