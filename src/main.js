@@ -14,32 +14,25 @@ const { PI } = Math;
 
 let objetoSeleccionado = null;
 let padreSeleccionado = null;
-let originalIndex;
-let objetoBounds = null;
-let lastAngle = 0;
-let angle = PI / 2;
+let posicionOriginal;
+let limitesObjeto = null;
+let ultimoAngulo = 0;
+let angulo = PI / 2;
 let animandoObjeto = false;
 
 let tarjetaObjeto = document.getElementById("tarjetaObjeto");
 
-document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
-  let svgPadre = group.closest("svg");
-  let padre = group.parentNode;
+document.querySelectorAll("#Playa > g, #Juegos > g").forEach((objeto) => {
+  let svgPadre = objeto.closest("svg");
+  let padre = objeto.parentNode;
 
-  let drawable;
-  let textoDrawable;
-  let tarjeta;
-  let textoTarjeta;
-
-  group.addEventListener("mouseover", () => {
+  objeto.addEventListener("mouseover", () => {
     if (!animandoObjeto) {
-      group.classList.add("seleccionado");
-      animate(group, {
-        // y: [{ to: "-1rem", ease: "outElastic(1, 0.3)", duration: 1000 }],
+      objeto.classList.add("seleccionado");
+      animate(objeto, {
         scale: [{ to: "1.1", ease: "outElastic(1, 0.3)", duration: 1000 }],
-        zIndex: [{ to: "100", duration: 1 }],
       });
-      animate(group, {
+      animate(objeto, {
         rotate: "5deg",
         ease: "inOutSine",
         alternate: true,
@@ -49,48 +42,49 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
     }
   });
 
-  group.addEventListener("mouseout", () => {
+  objeto.addEventListener("mouseout", () => {
     if (!animandoObjeto) {
-      group.classList.remove("seleccionado");
-      animate(group, {
-        // y: [{ to: "0", ease: "outElastic(1, 0.3)", duration: 1000 }],
+      objeto.classList.remove("seleccionado");
+      animate(objeto, {
         scale: [{ to: "1", ease: "outElastic(1, 0.3)", duration: 1000 }],
         rotate: [{ to: "0", ease: "inOutSine", duration: 100 }],
       });
     }
   });
 
-  // Al hacer clic, coloreamos el rectángulo de fondo
-  group.addEventListener("click", () => {
-    group.classList.remove("seleccionado");
+  objeto.addEventListener("click", () => {
+    objeto.classList.remove("seleccionado");
 
-    if (group.classList.contains("incorrecto")) {
+    if (objeto.classList.contains("incorrecto")) {
       // OBJETO INCORRECTO
 
       // Primero añadimos la clase que permite las transiciones de colores
       // para que no entre en conflicto con la animación de hover
-      group.classList.add("incorrectoClickado");
-      group.classList.add("incorrectoSeleccionado");
+      objeto.classList.add("incorrectoClickado");
+      objeto.classList.add("incorrectoSeleccionado");
       animandoObjeto = true;
-      const tl = createTimeline({ defaults: { duration: 750 } });
 
-      tl.label("start")
-        .add(group, {
+      const indicaObjetoIncorrecto = createTimeline({
+        defaults: { duration: 750 },
+      });
+
+      indicaObjetoIncorrecto
+        .add(objeto, {
           rotate: "5deg",
           ease: "inOutSine",
           alternate: true,
           loop: 2,
           duration: 100,
         })
-        .add(group, {
+        .add(objeto, {
           rotate: 0,
           duration: 100,
         })
         .call(() => {
-          group.classList.remove("incorrectoSeleccionado");
+          objeto.classList.remove("incorrectoSeleccionado");
         })
         .call(() => {
-          group.classList.remove("incorrectoClickado");
+          objeto.classList.remove("incorrectoClickado");
           animandoObjeto = false;
         }, 500);
     } else {
@@ -99,17 +93,22 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
       if (!animandoObjeto) {
         animandoObjeto = true;
 
-        const bbox = group.getBBox();
+        // Obtenemos el bounding box del grupo para ajustar el viewBox de la tarjeta
+        const bbox = objeto.getBBox();
 
         // Guardamos la posición de hijo original del grupo con respecto al padre
-        originalIndex = Array.from(group.parentNode.children).indexOf(group);
-        objetoSeleccionado = group;
-        padreSeleccionado = group.parentNode;
+        posicionOriginal = Array.from(objeto.parentNode.children).indexOf(
+          objeto,
+        );
+        objetoSeleccionado = objeto;
+        padreSeleccionado = objeto.parentNode;
 
-        const objetoATarjeta = createTimeline({ defaults: { duration: 750 } });
+        const mueveObjetoATarjeta = createTimeline({
+          defaults: { duration: 750 },
+        });
 
-        objetoATarjeta
-          .add(group, {
+        mueveObjetoATarjeta
+          .add(objeto, {
             rotate: 0,
             scale: [
               {
@@ -122,9 +121,9 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
             duration: 200,
           })
           .call(() => {
+            // Colocamos el objeto en el svg de la tarjeta
             let svgTarjetaObjeto = tarjetaObjeto.children[0];
-            // Colocamos el grupo en tarjetaObjeto
-            svgTarjetaObjeto.appendChild(group);
+            svgTarjetaObjeto.appendChild(objeto);
 
             // Ajustamos el viewBox para que el group cubra toda la extensión y quede centrado
             const padding = 20;
@@ -145,7 +144,7 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
             duration: 1000,
           })
           .add(
-            group,
+            objeto,
             {
               scale: { from: 0, to: 1 },
               ease: "outElastic(1, 0.3)",
@@ -158,23 +157,7 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
   });
 });
 
-const onMouseMove = (e) => {
-  if (objetoSeleccionado) {
-    const { width, height, left, top } = objetoBounds;
-    const x = e.clientX - left - width / 2;
-    const y = e.clientY - top - height / 2;
-    const currentAngle = Math.atan2(y, x);
-    const diff = currentAngle - lastAngle;
-    angle += diff > PI ? diff - 2 * PI : diff < -PI ? diff + 2 * PI : diff;
-    lastAngle = currentAngle;
-    objetoSeleccionado.rotate(angle); // Pass the new angle value in rad
-  }
-};
-
-// window.addEventListener("mousemove", onMouseMove);
-
 const cerrarTarjeta = document.getElementById("cerrarTarjeta");
-
 cerrarTarjeta.addEventListener("click", () => {
   if (objetoSeleccionado) {
     const objetoAPosicion = createTimeline({ defaults: { duration: 750 } });
@@ -193,9 +176,10 @@ cerrarTarjeta.addEventListener("click", () => {
       .call(() => {
         tarjetaObjeto.classList.add("hidden");
 
-        // Devolvemos el grupo a su posición original
-        const referenceNode = padreSeleccionado.children[originalIndex] || null;
-        padreSeleccionado.insertBefore(objetoSeleccionado, referenceNode);
+        // Devolvemos el objeto a su posición original
+        const nodoDeReferencia =
+          padreSeleccionado.children[posicionOriginal] || null;
+        padreSeleccionado.insertBefore(objetoSeleccionado, nodoDeReferencia);
       })
       .add(objetoSeleccionado, {
         scale: { from: 0, to: 1 },
@@ -205,6 +189,6 @@ cerrarTarjeta.addEventListener("click", () => {
       .call(() => {
         animandoObjeto = false;
         objetoSeleccionado = null;
-      });
+      }, 1000);
   }
 });
