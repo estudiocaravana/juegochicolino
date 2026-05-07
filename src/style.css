@@ -1,10 +1,13 @@
 @import "tailwindcss";
 
+/* Permitimos que los objetos se escalen desde su centro */
 svg > #Playa > g,
-svg > #Juegos > g {
+svg > #Juegos > g,
+#tarjetaObjeto > svg > g {
   @apply origin-center;
   transform-box: fill-box;
 }
+
 .seleccionado *:not(.rectangulo) {
   /* @apply stroke-white; */
 }

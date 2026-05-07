@@ -119,6 +119,7 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
                 ease: cubicBezier(0.5, 0, 0.9, 0.3),
               },
             ],
+            duration: 200,
           })
           .call(() => {
             let svgTarjetaObjeto = tarjetaObjeto.children[0];
@@ -136,15 +137,6 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
               `${viewBoxX} ${viewBoxY} ${viewBoxWidth} ${viewBoxHeight}`,
             );
 
-            // Colocamos el grupo en el centro de la pantalla
-            objetoBounds = group.getBoundingClientRect();
-            const centerY = window.clientHeight / 2;
-            const centerX = window.clientWidth / 2;
-            const offsetY =
-              centerY - (objetoBounds.top + objetoBounds.height / 2);
-            const offsetX =
-              centerX - (objetoBounds.left + objetoBounds.width / 2);
-
             tarjetaObjeto.classList.remove("hidden");
           })
           .add(tarjetaObjeto, {
@@ -152,11 +144,15 @@ document.querySelectorAll("#Playa > g, #Juegos > g").forEach((group) => {
             ease: "outElastic(1, 0.3)",
             duration: 1000,
           })
-          .add(group, {
-            scale: { from: 0, to: 1 },
-            ease: "outElastic(1, 0.3)",
-            duration: 300,
-          });
+          .add(
+            group,
+            {
+              scale: { from: 0, to: 1 },
+              ease: "outElastic(1, 0.3)",
+              duration: 1000,
+            },
+            400,
+          );
       }
     }
   });
@@ -186,7 +182,7 @@ cerrarTarjeta.addEventListener("click", () => {
     objetoAPosicion
       .add(objetoSeleccionado, {
         scale: { from: 1, to: 0 },
-        ease: "outElastic(1, 0.3)",
+        ease: cubicBezier(0.5, 0, 0.9, 0.3),
         duration: 300,
       })
       .add(tarjetaObjeto, {
