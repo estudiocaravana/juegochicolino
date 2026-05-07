@@ -8,6 +8,11 @@ svg > #Juegos > g,
   transform-box: fill-box;
 }
 
+.arbol {
+  @apply origin-bottom;
+  transform-box: fill-box;
+}
+
 .seleccionado *:not(.rectangulo) {
   /* @apply stroke-white; */
 }

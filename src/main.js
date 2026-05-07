@@ -5,6 +5,7 @@ import {
   createTimeline,
   createAnimatable,
   cubicBezier,
+  irregular,
   svg,
   stagger,
   text,
@@ -189,6 +190,30 @@ cerrarTarjeta.addEventListener("click", () => {
       .call(() => {
         animandoObjeto = false;
         objetoSeleccionado = null;
-      }, 1000);
+      });
   }
+});
+
+document.querySelectorAll(".arbol").forEach((arbol) => {
+  animate(arbol, {
+    rotate: [{ from: "-0.5deg", to: "0.5deg" }],
+    ease: "inOutSine",
+    alternate: true,
+    loop: true,
+    duration: 2000,
+    delay: Math.random() * 1000, // Para que no se muevan todos al mismo tiempo
+  });
+});
+
+document.querySelectorAll(".pajaro").forEach((pajaro) => {
+  animate(pajaro, {
+    y: [1000, -1000],
+    x: [-1000, 1000],
+    ease: "inOutSine",
+    // alternate: true,
+    loop: true,
+    duration: 5000,
+    loopDelay: 10000,
+    delay: 1000,
+  });
 });
