@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+html {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
 /* Permitimos que los objetos se escalen desde su centro */
 svg > #Playa > g,
 svg > #Juegos > g,

@@ -205,7 +205,7 @@ document.querySelectorAll(".arbol").forEach((arbol) => {
   });
 });
 
-document.querySelectorAll(".pajaro").forEach((pajaro) => {
+document.querySelectorAll("#pajaro").forEach((pajaro) => {
   animate(pajaro, {
     y: [1000, -1000],
     x: [-1000, 1000],
@@ -215,5 +215,26 @@ document.querySelectorAll(".pajaro").forEach((pajaro) => {
     duration: 5000,
     loopDelay: 10000,
     delay: 1000,
+  });
+});
+
+document.querySelectorAll("#gaviota").forEach((pajaro) => {
+  animate(pajaro, {
+    y: [-2000, 2000],
+    x: [-2000, 2000],
+    ease: "inOutSine",
+    // alternate: true,
+    loop: true,
+    duration: 20000,
+    loopDelay: 7000,
+    delay: 1000,
+  });
+});
+
+document.querySelectorAll("#nadador").forEach((nadador) => {
+  animate(nadador, {
+    y: 4,
+    alternate: true,
+    loop: true,
   });
 });
